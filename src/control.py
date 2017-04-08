@@ -1,13 +1,14 @@
 import robot
 import curses
 
+ROBOT = robot.Robot()
 
 MOVES = {
-    32: robot.stop_motors,
-    258: robot.backwards,
-    259: robot.forwards,
-    260: robot.right,
-    261: robot.left
+    32: ROBOT.stop_motors,
+    258: ROBOT.backwards,
+    259: ROBOT.forwards,
+    260: ROBOT.right,
+    261: ROBOT.left
 }
 
 
@@ -22,4 +23,4 @@ def run(std_scr):
 
 curses.wrapper(run)
 
-robot.cleanup()
+ROBOT.cleanup()
