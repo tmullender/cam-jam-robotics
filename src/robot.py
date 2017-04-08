@@ -17,6 +17,7 @@ aDutyCycle = 80
 bDutyCycle = 78
 # Setting the duty cycle to 0 means the motors will not turn
 stop = 0
+turningFactor = 2
 
 # Set the GPIO Pin mode to be Output
 GPIO.setup(pinMotorAForwards, GPIO.OUT)
@@ -37,44 +38,40 @@ pwmMotorBForwards.start(stop)
 pwmMotorBBackwards.start(stop)
 
 
+def update(a, b):
+    a_forwards = a if a > 0 else stop;
+    a_backwards = -a if a < 0 else stop;
+    b_forwards = b if b > 0 else stop;
+    b_backwards = -b if b < 0 else stop;
+    pwmMotorAForwards.ChangeDutyCycle(a_forwards)
+    pwmMotorABackwards.ChangeDutyCycle(a_backwards)
+    pwmMotorBForwards.ChangeDutyCycle(b_forwards)
+    pwmMotorBBackwards.ChangeDutyCycle(b_backwards)
+
+
 # Turn all motors off
 def stop_motors():
-    pwmMotorAForwards.ChangeDutyCycle(stop)
-    pwmMotorABackwards.ChangeDutyCycle(stop)
-    pwmMotorBForwards.ChangeDutyCycle(stop)
-    pwmMotorBBackwards.ChangeDutyCycle(stop)
+    update(stop, stop)
 
 
 # Turn both motors forwards
 def forwards():
-    pwmMotorAForwards.ChangeDutyCycle(aDutyCycle)
-    pwmMotorABackwards.ChangeDutyCycle(stop)
-    pwmMotorBForwards.ChangeDutyCycle(bDutyCycle)
-    pwmMotorBBackwards.ChangeDutyCycle(stop)
+    update(aDutyCycle, bDutyCycle)
 
 
 # Turn both motors backwards
 def backwards():
-    pwmMotorAForwards.ChangeDutyCycle(stop)
-    pwmMotorABackwards.ChangeDutyCycle(aDutyCycle)
-    pwmMotorBForwards.ChangeDutyCycle(stop)
-    pwmMotorBBackwards.ChangeDutyCycle(bDutyCycle)
+    update(-aDutyCycle, -bDutyCycle)
 
 
 # Turn left
 def left():
-    pwmMotorAForwards.ChangeDutyCycle(stop)
-    pwmMotorABackwards.ChangeDutyCycle(aDutyCycle/2)
-    pwmMotorBForwards.ChangeDutyCycle(bDutyCycle/2)
-    pwmMotorBBackwards.ChangeDutyCycle(stop)
+    update(-aDutyCycle/turningFactor, bDutyCycle/turningFactor)
 
 
 # Turn Right
 def right():
-    pwmMotorAForwards.ChangeDutyCycle(aDutyCycle/2)
-    pwmMotorABackwards.ChangeDutyCycle(stop)
-    pwmMotorBForwards.ChangeDutyCycle(stop)
-    pwmMotorBBackwards.ChangeDutyCycle(bDutyCycle/2)
+    update(aDutyCycle/turningFactor, -bDutyCycle/turningFactor)
 
 
 def cleanup():
